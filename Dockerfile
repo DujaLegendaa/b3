@@ -52,10 +52,10 @@ RUN \
 
 RUN chown ${USER} /home/${USER}/app
 
-USER "${USER}"
-
 RUN mkdir /home/${USER}/b3_files
-RUN chmod 777 /home/${USER}/b3_files
+RUN chown ${USER} /home/${USER}/b3_files
+
+USER "${USER}"
 
 ENV MIX_ENV="prod"
 
