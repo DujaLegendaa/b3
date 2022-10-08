@@ -28,10 +28,13 @@ defmodule B3.Endpoint do
     send_resp(conn, 404, "Not found")
   end
   
-  def upload(conn, %{"name" => name, "file" => upload}) do
+  def upload(conn, %{"name" => name, "file" => upload, "quality" => quality}) do
     valid_types = ["image/png", "image/jpeg"]
     if upload.content_type in valid_types do
-      System.cmd("cp", [upload.path, get_file_path(name)])
+      upload.path
+      |> Mogrify.open()
+      |> Mogrify.quality(quality)
+      |> Mogrify.save([path: get_file_path(name)])
       send_resp(conn, 200, "Successfully uploaded #{name} (available at files/#{name})")
     else
       send_resp(conn, 400, "Server only accepts #{inspect valid_types} files")
